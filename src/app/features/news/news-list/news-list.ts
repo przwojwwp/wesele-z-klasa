@@ -1,21 +1,26 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { NewsService } from '../news.service';
 import { News } from '../models/news.model';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [CommonModule],
+
   templateUrl: './news-list.html',
   styleUrls: ['./news-list.scss'],
 })
 export class NewsListComponent implements OnInit {
   private newsService = inject(NewsService);
+  private sanitizer = inject(DomSanitizer);
 
   news = signal<News[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  getSafeHtml(content: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(content);
+  }
 
   ngOnInit(): void {
     this.loading.set(true);

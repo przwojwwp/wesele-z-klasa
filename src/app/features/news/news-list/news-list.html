@@ -10,7 +10,7 @@
     @for (item of news(); track item.id) {
     <li class="news-item">
       <h3>{{ item.title }}</h3>
-      <p>{{ item.content }}</p>
+      <div [innerHTML]="getSafeHtml(item.content)"></div>
       <small>{{ item.date }}</small>
     </li>
     }
