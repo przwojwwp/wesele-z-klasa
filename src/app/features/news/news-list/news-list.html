@@ -1,0 +1,19 @@
+<section class="news-list">
+  @if (loading()) {
+  <div class="loading">Loading...</div>
+  } @if (error()) {
+  <div class="error">{{ error() }}</div>
+  } @if (!loading() && !error()) { @if (news().length === 0) {
+  <div class="empty">No news available</div>
+  } @if (news().length > 0) {
+  <ul class="news-items">
+    @for (item of news(); track item.id) {
+    <li class="news-item">
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.content }}</p>
+      <small>{{ item.date }}</small>
+    </li>
+    }
+  </ul>
+  } }
+</section>
