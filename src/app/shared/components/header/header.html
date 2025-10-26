@@ -5,7 +5,10 @@
 
   <span class="spacer"></span>
 
-  <span class="greeting">Witaj, Użytkowniku</span>
+  @if (auth.user()) {
+    <span>Witaj, {{ auth.user()!.username }}</span>
+  }
+
   <button mat-button type="button" (click)="onLogout()">
     <mat-icon fontIcon="logout"></mat-icon>
     Wyloguj

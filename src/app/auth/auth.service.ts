@@ -10,7 +10,7 @@ export interface LoginCredentials {
 
 export interface User {
   email?: string;
-  name?: string;
+  username?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,6 +20,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
 
   readonly isLoggedIn = signal<boolean>(!!localStorage.getItem(this.TOKEN_KEY));
+  readonly user = signal<User | null>(null);
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
@@ -33,12 +34,16 @@ export class AuthService {
   private clearToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.isLoggedIn.set(false);
+    this.user.set(null);
   }
 
   login(credentials: LoginCredentials): Observable<string> {
     const device = credentials.device || this.getBrowserName();
     return this.http.post<{ token: string }>(`${this.API}/login`, { ...credentials, device }).pipe(
-      tap(({ token }) => this.setToken(token)),
+      tap(({ token }) => {
+        this.setToken(token);
+        this.fetchUser().subscribe();
+      }),
       map(({ token }) => token)
     );
   }
@@ -57,8 +62,17 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return of(null);
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.get<User>(`${this.API}/login`, { headers })
-      .pipe(catchError(() => of(null)));
+    return this.http.get<User>(`${this.API}/login`, { headers }).pipe(
+      tap((user) => this.user.set(user)),
+      catchError(() => {
+        this.user.set(null);
+        return of(null);
+      })
+    );
+  }
+
+  fetchUser(): Observable<User | null> {
+    return this.getUser();
   }
 
   private getBrowserName(): string {

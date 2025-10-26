@@ -4,16 +4,17 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../auth/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, MatToolbarModule, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatToolbarModule, MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
 })
 export class HeaderComponent {
-  private auth = inject(AuthService);
+  auth = inject(AuthService);
 
   onLogout(): void {
     this.auth.logout().subscribe({
