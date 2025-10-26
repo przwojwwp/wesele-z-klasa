@@ -1,22 +1,22 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header';
 import { AuthService } from './auth/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('news-app');
   protected readonly loggedIn = signal(false);
   private auth = inject(AuthService);
 
   ngOnInit() {
-    this.auth.getUser().subscribe((user) => {
-      this.loggedIn.set(!!user);
-    });
+    const token = this.auth.getToken();
+    this.loggedIn.set(!!token);
   }
 }
