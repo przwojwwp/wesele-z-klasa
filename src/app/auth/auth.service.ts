@@ -1,12 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, tap, catchError, finalize } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of, tap, map, catchError, finalize } from 'rxjs';
 
 export interface LoginCredentials {
   email: string;
   password: string;
-  device: string;
+  device?: string;
 }
 
 export interface User {
@@ -33,7 +32,8 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<string> {
-    return this.http.post<{ token: string }>(`${this.API}/login`, credentials).pipe(
+    const device = credentials.device || this.getBrowserName();
+    return this.http.post<{ token: string }>(`${this.API}/login`, { ...credentials, device }).pipe(
       tap(({ token }) => this.setToken(token)),
       map(({ token }) => token)
     );
@@ -50,9 +50,18 @@ export class AuthService {
   }
 
   getUser(): Observable<User | null> {
-    if (!this.getToken()) {
-      return of(null);
-    }
-    return this.http.get<User>(`${this.API}/login`).pipe(catchError(() => of(null)));
+    const token = this.getToken();
+    if (!token) return of(null);
+
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<User>(`${this.API}/login`, { headers }).pipe(catchError(() => of(null)));
+  }
+
+  private getBrowserName(): string {
+    const ua = navigator.userAgent;
+    if (ua.includes('Chrome')) return 'Chrome';
+    if (ua.includes('Firefox')) return 'Firefox';
+    if (ua.includes('Safari')) return 'Safari';
+    return 'Unknown';
   }
 }
