@@ -25,12 +25,6 @@ export class NewsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.auth.getUser().subscribe((user) => {
-      if (user) {
-        console.log(user);
-      }
-    });
-
     this.loading.set(true);
     this.newsService.getNews().subscribe({
       next: (news) => {

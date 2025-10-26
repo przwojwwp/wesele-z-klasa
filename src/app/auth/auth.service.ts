@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, catchError, finalize } from 'rxjs/operators';
 
@@ -17,7 +17,6 @@ export interface User {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-
   private readonly API = 'https://test.tyonline.pl';
   private readonly TOKEN_KEY = 'auth_token';
 
@@ -51,12 +50,9 @@ export class AuthService {
   }
 
   getUser(): Observable<User | null> {
-    const token = this.getToken();
-    if (!token) {
+    if (!this.getToken()) {
       return of(null);
     }
-
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    return this.http.get<User>(`${this.API}/login`, { headers }).pipe(catchError(() => of(null)));
+    return this.http.get<User>(`${this.API}/login`).pipe(catchError(() => of(null)));
   }
 }
