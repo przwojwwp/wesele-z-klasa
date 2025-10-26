@@ -19,7 +19,6 @@ export class HeaderComponent {
   onLogout(): void {
     this.auth.logout().subscribe({
       next: () => {
-        console.log('[logout] token cleared');
         location.reload();
       },
       error: (err) => console.error('[logout] error', err),

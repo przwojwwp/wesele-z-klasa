@@ -28,7 +28,6 @@ export class NewsListComponent implements OnInit {
       next: (news) => {
         this.news.set(news);
         this.loading.set(false);
-        console.log(news);
       },
       error: (err) => {
         console.error('[GET /news] error:', err);
