@@ -1,0 +1,23 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e7f1ff 0%, #d3e6ff 100%);
+
+  mat-card {
+    width: 340px;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .error {
+    margin-top: 1rem;
+    color: #e53935;
+    font-size: 0.9rem;
+  }
+}
