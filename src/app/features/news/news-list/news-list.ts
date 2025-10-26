@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { NewsService } from '../news.service';
 import { News } from '../models/news.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-news-list',
@@ -13,6 +14,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class NewsListComponent implements OnInit {
   private newsService = inject(NewsService);
   private sanitizer = inject(DomSanitizer);
+  private auth = inject(AuthService);
 
   news = signal<News[]>([]);
   loading = signal(false);
@@ -23,6 +25,12 @@ export class NewsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.auth.getUser().subscribe((user) => {
+      if (user) {
+        console.log(user);
+      }
+    });
+
     this.loading.set(true);
     this.newsService.getNews().subscribe({
       next: (news) => {
