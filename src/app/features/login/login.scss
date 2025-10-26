@@ -6,13 +6,51 @@
   background: linear-gradient(135deg, #e7f1ff 0%, #d3e6ff 100%);
 
   mat-card {
-    width: 340px;
-    padding: 2rem;
+    width: 360px;
+    padding: 2.5rem 2.75rem;
     text-align: center;
+    border-radius: 10px;
+    background-color: #fefefe;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   }
 
-  .full-width {
+  h2 {
+    color: var(--mat-sys-primary);
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: left; // ułatwia naturalny flow tekstu
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+
+    .hint {
+      color: #6a7da1;
+      font-size: 0.8rem;
+      margin-bottom: 0.3rem;
+      margin-left: 0.25rem; // wyrównanie z inputem
+      text-align: left;
+      font-weight: 400;
+    }
+  }
+
+  mat-form-field.full-width {
     width: 100%;
+  }
+
+  button.full-width {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0;
+    font-size: 1rem;
   }
 
   .error {
